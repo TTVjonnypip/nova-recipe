@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Character Select</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app" class="hidden">
+    <div class="vignette"></div>
+
+    <!-- LEFT: character slots -->
+    <aside class="panel left">
+        <header>
+            <span class="eyebrow">Welcome back</span>
+            <h1>Choose your story</h1>
+        </header>
+        <ul id="slots"></ul>
+        <button class="ghost" id="btn-disconnect">Disconnect</button>
+    </aside>
+
+    <!-- RIGHT: details -->
+    <section class="panel right" id="details">
+        <div id="view-character" class="view hidden">
+            <span class="eyebrow" id="d-cid"></span>
+            <h2 id="d-name"></h2>
+            <dl class="stats">
+                <div><dt>Born</dt><dd id="d-dob"></dd></div>
+                <div><dt>Gender</dt><dd id="d-gender"></dd></div>
+                <div><dt>Nationality</dt><dd id="d-nat"></dd></div>
+                <div><dt>Job</dt><dd id="d-job"></dd></div>
+                <div><dt>Cash</dt><dd id="d-cash"></dd></div>
+                <div><dt>Bank</dt><dd id="d-bank"></dd></div>
+                <div><dt>Phone</dt><dd id="d-phone"></dd></div>
+                <div><dt>Citizen ID</dt><dd id="d-citizen"></dd></div>
+            </dl>
+            <div class="actions">
+                <button class="primary" id="btn-play">Play</button>
+                <button class="danger" id="btn-delete">Delete</button>
+            </div>
+        </div>
+
+        <form id="view-create" class="view hidden" autocomplete="off">
+            <span class="eyebrow">New character</span>
+            <h2>Who are you?</h2>
+            <div class="row">
+                <label>First name<input name="firstname" required maxlength="16"></label>
+                <label>Last name<input name="lastname" required maxlength="16"></label>
+            </div>
+            <label>Date of birth<input type="date" name="birthdate" required></label>
+            <label>Nationality
+                <select name="nationality" id="nat-select"></select>
+                <input name="nationality" id="nat-input" maxlength="50" placeholder="e.g. American" class="hidden" disabled>
+            </label>
+            <div class="gender">
+                <span>Gender</span>
+                <div class="seg">
+                    <input type="radio" name="gender" id="g0" value="0" checked><label for="g0">Male</label>
+                    <input type="radio" name="gender" id="g1" value="1"><label for="g1">Female</label>
+                </div>
+            </div>
+            <p class="error" id="create-error"></p>
+            <div class="actions">
+                <button class="primary" type="submit" id="btn-create">Create character</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Delete confirm -->
+    <div class="modal hidden" id="modal">
+        <div class="modal-card">
+            <h3>Delete character?</h3>
+            <p>This permanently removes <strong id="m-name"></strong> and everything they own. Type <code id="m-confirm-word"></code> to confirm.</p>
+            <input id="m-input">
+            <div class="actions">
+                <button class="ghost" id="m-cancel">Cancel</button>
+                <button class="danger" id="m-ok" disabled>Delete forever</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

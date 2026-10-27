@@ -1,0 +1,230 @@
+:root {
+    --bg: rgba(14, 16, 20, 0.86);
+    --panel: rgba(22, 25, 31, 0.92);
+    --slot: rgba(255, 255, 255, 0.045);
+    --slot-hover: rgba(255, 255, 255, 0.09);
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #e9ecf1;
+    --muted: #8a93a3;
+    --accent: #f2b544;
+    --accent-dim: rgba(242, 181, 68, 0.18);
+    --danger: #ef5b5b;
+    --ok: #4cc38a;
+    --slot-size: 84px;
+    --gap: 6px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+html, body {
+    width: 100%; height: 100%;
+    background: transparent;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+/* ─── Layout ─────────────────────────────────────── */
+
+#app {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center; gap: 18px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0.35), rgba(0,0,0,0.7));
+    animation: fade 0.15s ease-out;
+}
+
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.panel-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 16px; margin-bottom: 12px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+    font-weight: 600;
+}
+
+.title {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 22px; line-height: 1.1; letter-spacing: 0.02em;
+    max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.weight { width: 150px; text-align: right; font-size: 11px; color: var(--muted); }
+.weight .bar { margin-top: 5px; }
+
+.bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.2s; }
+.bar i.full { background: var(--danger); }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, var(--slot-size));
+    gap: var(--gap);
+    max-height: calc(var(--slot-size) * 5 + var(--gap) * 4);
+    overflow-y: auto;
+    padding-right: 4px;
+}
+.grid::-webkit-scrollbar { width: 4px; }
+.grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+/* ─── Slots ──────────────────────────────────────── */
+
+.slot {
+    position: relative;
+    width: var(--slot-size); height: var(--slot-size);
+    background: var(--slot);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    transition: background 0.1s, border-color 0.1s;
+}
+.slot.filled { cursor: grab; }
+.slot:hover { background: var(--slot-hover); }
+.slot.drop-target { border-color: var(--accent); background: var(--accent-dim); }
+.slot.dragging { opacity: 0.35; }
+.slot.hot { border-color: rgba(242, 181, 68, 0.28); }
+
+.slot .num {
+    position: absolute; top: 4px; left: 6px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px;
+    color: var(--accent); opacity: 0.85;
+}
+.slot .count {
+    position: absolute; top: 4px; right: 6px;
+    font-size: 11px; font-weight: 600; color: var(--text);
+}
+.slot .price {
+    position: absolute; top: 4px; right: 6px;
+    font-size: 11px; font-weight: 600; color: var(--ok);
+}
+.slot img, .slot .glyph {
+    position: absolute; left: 50%; top: 46%;
+    transform: translate(-50%, -50%);
+    width: 54px; height: 54px; object-fit: contain;
+    pointer-events: none;
+}
+.slot .glyph {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 26px;
+    color: var(--muted); background: rgba(255,255,255,0.04); border-radius: 50%;
+    width: 44px; height: 44px;
+}
+.slot .label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 3px 5px;
+    font-size: 10px; text-align: center;
+    background: rgba(0,0,0,0.35);
+    border-radius: 0 0 5px 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: #cfd5de;
+}
+
+/* ─── Center column ──────────────────────────────── */
+
+.center { display: flex; flex-direction: column; gap: 8px; width: 132px; }
+
+.amount {
+    display: flex; flex-direction: column; gap: 4px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px;
+}
+.amount span { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.amount small { font-size: 10px; color: var(--muted); }
+.amount input {
+    width: 100%; padding: 7px 8px;
+    background: rgba(0,0,0,0.35); border: 1px solid var(--line); border-radius: 5px;
+    color: var(--text); font: 600 15px 'Rajdhani', sans-serif; outline: none;
+    user-select: text;
+}
+.amount input:focus { border-color: var(--accent); }
+.amount input::-webkit-inner-spin-button { opacity: 0.4; }
+
+.action {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 64px;
+    background: var(--panel);
+    border: 1px dashed rgba(255,255,255,0.14);
+    border-radius: 8px;
+    transition: all 0.12s;
+}
+.action b { font-family: 'Rajdhani', sans-serif; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; }
+.action small { font-size: 10px; color: var(--muted); }
+.action.drop-target { border-color: var(--accent); background: var(--accent-dim); border-style: solid; }
+
+.hints { margin-top: 4px; font-size: 10px; line-height: 1.6; color: var(--muted); text-align: center; }
+
+/* ─── Drag ghost, tooltip ────────────────────────── */
+
+#ghost {
+    position: fixed; z-index: 50; pointer-events: none;
+    width: var(--slot-size); height: var(--slot-size);
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.9;
+    background: rgba(30, 33, 40, 0.95);
+    border: 1px solid var(--accent);
+}
+
+#tooltip {
+    position: fixed; z-index: 40; pointer-events: none;
+    min-width: 170px; max-width: 240px;
+    background: rgba(10, 12, 16, 0.96);
+    border: 1px solid var(--line); border-left: 2px solid var(--accent);
+    border-radius: 6px; padding: 9px 11px;
+    font-size: 11px; line-height: 1.5; color: var(--muted);
+}
+#tooltip h4 { font-family: 'Rajdhani', sans-serif; font-size: 16px; color: var(--text); margin-bottom: 2px; }
+#tooltip .meta { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); }
+#tooltip .meta b { color: var(--text); font-weight: 500; }
+
+/* ─── Hotbar ─────────────────────────────────────── */
+
+#hotbar {
+    position: fixed; bottom: 34px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+    padding: 8px; border-radius: 10px;
+    background: var(--bg); border: 1px solid var(--line);
+    animation: rise 0.18s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translate(-50%, 10px); } }
+#hotbar .slot { --slot-size: 70px; width: 70px; height: 70px; }
+#hotbar .slot img, #hotbar .slot .glyph { width: 44px; height: 44px; }
+
+/* ─── Toasts & progress ──────────────────────────── */
+
+#toasts {
+    position: fixed; top: 24px; right: 24px; z-index: 60;
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+}
+.toast {
+    padding: 9px 14px; min-width: 200px;
+    background: rgba(12, 14, 18, 0.95);
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 6px; font-size: 12px;
+    animation: slide 0.2s ease-out;
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.success { border-left-color: var(--ok); }
+.toast.out { opacity: 0; transform: translateX(10px); transition: all 0.25s; }
+@keyframes slide { from { opacity: 0; transform: translateX(16px); } }
+
+#progress {
+    position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
+    width: 260px; text-align: center;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 0.04em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+#progress .bar { margin-top: 6px; height: 6px; background: rgba(0,0,0,0.5); }
+#progress.cancelled .bar i { background: var(--danger); }
+
+@media (max-height: 760px) { :root { --slot-size: 72px; } }

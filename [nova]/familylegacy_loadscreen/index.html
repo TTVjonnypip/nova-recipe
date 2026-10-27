@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Family Legacy RP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1f1a;
+    --bg-lift: #17382f;
+    --brass: #c9a45c;
+    --ivory: #ede6d6;
+    --velvet: #6e1f2e;
+    --display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --body: "Jost", "Segoe UI", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; overflow: hidden; background: var(--bg); }
+
+  body {
+    font-family: var(--body);
+    color: var(--ivory);
+    background:
+      radial-gradient(ellipse 60% 70% at 78% 55%, var(--bg-lift) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 60% at 0% 100%, #112a23 0%, transparent 60%),
+      var(--bg);
+  }
+
+  /* Optional server background image (set in CONFIG below) */
+  .bg-image {
+    position: fixed; inset: 0;
+    background-size: cover; background-position: center;
+    opacity: 0.18; mix-blend-mode: luminosity;
+  }
+
+  /* Film grain */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .stage {
+    position: relative; z-index: 1;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    padding: clamp(28px, 5vw, 80px);
+    gap: 24px;
+  }
+
+  /* ---------- Left column ---------- */
+  .copy {
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 0;
+  }
+
+  .hero { margin-top: auto; margin-bottom: auto; }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(3.2rem, 8.2vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--ivory);
+  }
+
+  .tagline {
+    margin-top: clamp(16px, 2.4vw, 32px);
+    max-width: 30ch;
+    font-family: var(--display);
+    font-size: clamp(1.2rem, 2vw, 1.9rem);
+    line-height: 1.3;
+    color: var(--brass);
+  }
+
+  .progress { max-width: 440px; margin-top: clamp(28px, 5vh, 64px); }
+
+  .progress-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: rgba(237, 230, 214, 0.78);
+  }
+  .progress-row .pct {
+    font-family: var(--display); font-size: 1.6rem; color: var(--ivory);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .track { height: 2px; background: rgba(237, 230, 214, 0.16); }
+  .fill { height: 100%; width: 0%; background: var(--brass); }
+
+  .tip {
+    min-height: 3.2em; max-width: 46ch;
+    font-size: 0.98rem; line-height: 1.6;
+    color: rgba(237, 230, 214, 0.7);
+    transition: opacity 0.6s ease;
+  }
+  .tip strong { color: var(--ivory); font-weight: 500; }
+  .tip.hide { opacity: 0; }
+
+  .footer {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    margin-top: 24px; font-size: 0.9rem;
+    color: rgba(237, 230, 214, 0.55);
+  }
+  .footer b { font-weight: 500; color: var(--brass); }
+
+  /* ---------- Family tree ---------- */
+  .tree-wrap { display: flex; align-items: flex-end; justify-content: center; min-height: 0; }
+  svg.tree { height: 100%; max-height: 100%; width: auto; max-width: 100%; overflow: visible; }
+
+  .limb {
+    fill: none; stroke: var(--brass); stroke-width: 3; stroke-linecap: butt;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+  }
+  .limb.thin { stroke-width: 2; }
+
+  .frame-ring { fill: none; stroke: var(--brass); stroke-width: 2.5; }
+  .frame-ring.outer { stroke-width: 1; opacity: 0.5; }
+  .frame-fill { fill: var(--bg); transition: fill 1.2s ease; }
+  .frame.lit .frame-fill { fill: var(--velvet); }
+  .frame-head, .frame-body { fill: var(--brass); opacity: 0; transition: opacity 1.2s ease 0.3s; }
+  .frame.lit .frame-head, .frame.lit .frame-body { opacity: 0.9; }
+
+  .ground { stroke: rgba(201, 164, 92, 0.35); stroke-width: 1; }
+
+  @media (max-width: 820px) {
+    .stage { grid-template-columns: 1fr; }
+    .tree-wrap { position: absolute; right: -8%; bottom: 0; height: 55%; opacity: 0.35; z-index: -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tip, .frame-fill, .frame-head, .frame-body { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-image" id="bgImage"></div>
+
+  <main class="stage">
+    <section class="copy">
+      <div class="hero">
+        <h1 id="serverName">Family Legacy RP</h1>
+        <p class="tagline" id="tagline">Every family starts somewhere. Build yours here.</p>
+
+        <div class="progress" aria-live="polite">
+          <div class="progress-row">
+            <span id="status">Connecting to the server</span>
+            <span class="pct" id="pct">0%</span>
+          </div>
+          <div class="track"><div class="fill" id="fill"></div></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="tip" id="tip"></p>
+        <div class="footer" id="footer"></div>
+      </div>
+    </section>
+
+    <section class="tree-wrap" aria-hidden="true">
+      <svg class="tree" viewBox="0 0 400 620" xmlns="http://www.w3.org/2000/svg">
+        <line class="ground" x1="60" y1="600" x2="340" y2="600"/>
+
+        <!-- Limbs: each has pathLength=1 so progress can draw it -->
+        <path class="limb" data-start="0.00" data-end="0.30" pathLength="1"
+              d="M200 600 C200 540 200 440 200 372"/>
+        <path class="limb thin" data-start="0.22" data-end="0.46" pathLength="1"
+              d="M200 490 C200 440 120 450 100 390 C90 360 92 340 92 325"/>
+        <path class="limb thin" data-start="0.36" data-end="0.60" pathLength="1"
+              d="M200 450 C200 400 290 410 305 350 C312 325 312 310 312 298"/>
+        <path class="limb thin" data-start="0.50" data-end="0.74" pathLength="1"
+              d="M200 372 C200 320 140 320 132 262 C130 240 130 225 130 212"/>
+        <path class="limb thin" data-start="0.62" data-end="0.86" pathLength="1"
+              d="M200 372 C200 320 268 322 275 262 C278 240 278 210 278 196"/>
+        <path class="limb" data-start="0.70" data-end="1.00" pathLength="1"
+              d="M200 372 C200 300 200 220 200 142"/>
+
+        <!-- Portrait frames at each limb tip, lit when the limb completes -->
+        <g class="frame" data-at="0.46" transform="translate(92 300)">
+          <ellipse class="frame-ring outer" rx="26" ry="32"/>
+          <ellipse class="frame-fill" rx="21" ry="27"/>
+          <ellipse class="frame-ring" rx="21" ry="27"/>
+          <circle class="frame-head" cy="-6" r="7"/>
+          <path class="frame-body" d="M-13 20 C-13 8 13 8 13 20 Z"/>
+        </g>
+        <g class="frame" data-at="0.60" transform="translate(312 272)">
+          <ellipse class="frame-ring outer" rx="26" ry="32"/>
+          <ellipse class="frame-fill" rx="21" ry="27"/>
+          <ellipse class="frame-ring" rx="21" ry="27"/>
+          <circle class="frame-head" cy="-6" r="7"/>
+          <path class="frame-body" d="M-13 20 C-13 8 13 8 13 20 Z"/>
+        </g>
+        <g class="frame" data-at="0.74" transform="translate(130 186)">
+          <ellipse class="frame-ring outer" rx="26" ry="32"/>
+          <ellipse class="frame-fill" rx="21" ry="27"/>
+          <ellipse class="frame-ring" rx="21" ry="27"/>
+          <circle class="frame-head" cy="-6" r="7"/>
+          <path class="frame-body" d="M-13 20 C-13 8 13 8 13 20 Z"/>
+        </g>
+        <g class="frame" data-at="0.86" transform="translate(278 170)">
+          <ellipse class="frame-ring outer" rx="26" ry="32"/>
+          <ellipse class="frame-fill" rx="21" ry="27"/>
+          <ellipse class="frame-ring" rx="21" ry="27"/>
+          <circle class="frame-head" cy="-6" r="7"/>
+          <path class="frame-body" d="M-13 20 C-13 8 13 8 13 20 Z"/>
+        </g>
+        <g class="frame" data-at="1.00" transform="translate(200 104) scale(1.35)">
+          <ellipse class="frame-ring outer" rx="26" ry="32"/>
+          <ellipse class="frame-fill" rx="21" ry="27"/>
+          <ellipse class="frame-ring" rx="21" ry="27"/>
+          <circle class="frame-head" cy="-6" r="7"/>
+          <path class="frame-body" d="M-13 20 C-13 8 13 8 13 20 Z"/>
+        </g>
+      </svg>
+    </section>
+  </main>
+
+<script>
+  /* ============================================================
+     CONFIG: edit these to customize the loading screen
+     ============================================================ */
+  const CONFIG = {
+    serverName: "Family Legacy RP",
+    tagline: "Every family starts somewhere. Build yours here.",
+    backgroundImage: "",              // e.g. "bg.jpg" (add it to fxmanifest files {})
+    tipInterval: 7000,                // ms between tips
+    tips: [
+      "<strong>Stay in character.</strong> Keep real-life talk out of the city.",
+      "<strong>Value your life.</strong> Act like your character wants to see tomorrow.",
+      "<strong>New to the city?</strong> Ask staff or a citizen for help. We all started somewhere.",
+      "<strong>Respect every story.</strong> Give other players room to build theirs.",
+      "<strong>Need help?</strong> Open a ticket in our Discord and a staff member will respond."
+    ],
+    links: [
+      { label: "Discord", value: "discord.gg/yourinvite" },
+      { label: "Website", value: "familylegacyrp.com" }
+    ]
+  };
+
+  /* ============================================================
+     Setup
+     ============================================================ */
+  document.title = CONFIG.serverName;
+  document.getElementById("serverName").textContent = CONFIG.serverName;
+  document.getElementById("tagline").textContent = CONFIG.tagline;
+  if (CONFIG.backgroundImage) {
+    document.getElementById("bgImage").style.backgroundImage = "url('" + CONFIG.backgroundImage + "')";
+  }
+
+  const footer = document.getElementById("footer");
+  CONFIG.links.forEach(function (l) {
+    const s = document.createElement("span");
+    s.innerHTML = l.label + " <b>" + l.value + "</b>";
+    footer.appendChild(s);
+  });
+
+  /* ---------- Rotating tips ---------- */
+  const tipEl = document.getElementById("tip");
+  let tipIndex = 0;
+  function showTip() {
+    tipEl.classList.add("hide");
+    setTimeout(function () {
+      tipEl.innerHTML = CONFIG.tips[tipIndex % CONFIG.tips.length];
+      tipEl.classList.remove("hide");
+      tipIndex++;
+    }, 600);
+  }
+  tipEl.innerHTML = CONFIG.tips[0]; tipIndex = 1;
+  setInterval(showTip, CONFIG.tipInterval);
+
+  /* ---------- Progress + tree ---------- */
+  const limbs   = Array.from(document.querySelectorAll(".limb"));
+  const frames  = Array.from(document.querySelectorAll(".frame"));
+  const fillEl  = document.getElementById("fill");
+  const pctEl   = document.getElementById("pct");
+  const statusEl = document.getElementById("status");
+
+  let target = 0;     // real progress (0 to 1)
+  let shown = 0;      // eased progress on screen
+
+  function phase(p) {
+    if (p < 0.2)  return "Connecting to the server";
+    if (p < 0.6)  return "Loading the map";
+    if (p < 0.9)  return "Streaming vehicles and props";
+    if (p < 1)    return "Almost home";
+    return "Welcome to the family";
+  }
+
+  function render(p) {
+    fillEl.style.width = (p * 100) + "%";
+    pctEl.textContent = Math.round(p * 100) + "%";
+    statusEl.textContent = phase(p);
+
+    limbs.forEach(function (el) {
+      const s = parseFloat(el.dataset.start);
+      const e = parseFloat(el.dataset.end);
+      const t = Math.min(1, Math.max(0, (p - s) / (e - s)));
+      el.style.strokeDashoffset = 1 - t;
+    });
+    frames.forEach(function (el) {
+      el.classList.toggle("lit", p >= parseFloat(el.dataset.at) - 0.001);
+    });
+  }
+
+  function tick() {
+    shown += (target - shown) * 0.06;
+    if (Math.abs(target - shown) < 0.0005) shown = target;
+    render(shown);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* FiveM sends load progress through window messages */
+  window.addEventListener("message", function (e) {
+    const d = e.data;
+    if (d && d.eventName === "loadProgress" && typeof d.loadFraction === "number") {
+      target = Math.max(target, Math.min(1, d.loadFraction));
+    }
+  });
+
+  /* Preview mode: when opened in a normal browser, simulate loading */
+  if (!window.invokeNative) {
+    const started = Date.now();
+    const duration = 14000;
+    const sim = setInterval(function () {
+      target = Math.min(1, (Date.now() - started) / duration);
+      if (target >= 1) clearInterval(sim);
+    }, 100);
+  }
+</script>
+</body>
+</html>

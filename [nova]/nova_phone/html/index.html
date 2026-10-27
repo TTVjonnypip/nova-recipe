@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nova Phone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="phone" class="hidden">
+    <div class="frame">
+      <div class="notch"></div>
+      <div class="screen" id="screen">
+        <div class="statusbar">
+          <span id="clock">12:00</span>
+          <span class="status-icons"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></span>
+        </div>
+
+        <!-- Home -->
+        <div id="home" class="view">
+          <div class="home-clock">
+            <div id="bigClock">12:00</div>
+            <div id="bigDate">Sunday</div>
+          </div>
+          <div class="grid" id="appGrid"></div>
+          <div class="dock" id="dock"></div>
+        </div>
+
+        <!-- App container -->
+        <div id="app" class="view hidden">
+          <div class="app-header">
+            <button class="icon-btn" id="backBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="app-title" id="appTitle"></div>
+            <div class="app-action" id="appAction"></div>
+          </div>
+          <div class="app-body" id="appBody"></div>
+        </div>
+
+        <!-- Call overlay -->
+        <div id="callScreen" class="hidden">
+          <div class="call-avatar"><i class="fa-solid fa-user"></i></div>
+          <div class="call-name" id="callName"></div>
+          <div class="call-status" id="callStatus"></div>
+          <div class="call-buttons" id="callButtons"></div>
+        </div>
+
+        <div id="toasts"></div>
+        <div class="home-bar" id="homeBar"></div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

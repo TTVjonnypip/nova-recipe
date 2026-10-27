@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealership</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app" class="hidden">
+
+    <aside class="panel">
+        <header class="panel-head">
+            <div>
+                <h1 id="shopName">Dealership</h1>
+                <p class="funds">
+                    <span>Cash <b id="cash">0</b></span>
+                    <span>Bank <b id="bank">0</b></span>
+                </p>
+            </div>
+            <button id="closeBtn" class="icon-btn" aria-label="Close">&times;</button>
+        </header>
+
+        <nav class="tabs" id="tabs">
+            <button class="tab active" data-tab="browse">Browse</button>
+            <button class="tab hidden" id="manageTab" data-tab="manage">Manage stock</button>
+        </nav>
+
+        <!-- Browse -->
+        <section id="tab-browse" class="tab-body">
+            <input id="search" type="text" placeholder="Search by name or model" autocomplete="off">
+            <div id="categories" class="chips"></div>
+            <ul id="list" class="car-list"></ul>
+        </section>
+
+        <!-- Manage (admins only) -->
+        <section id="tab-manage" class="tab-body hidden">
+            <div class="form">
+                <label>Model (spawn name)
+                    <input id="fModel" type="text" placeholder="sultan" autocomplete="off">
+                </label>
+                <label>Display name
+                    <input id="fLabel" type="text" placeholder="Sultan" autocomplete="off">
+                </label>
+                <div class="row">
+                    <label>Price
+                        <input id="fPrice" type="number" min="1" placeholder="45000">
+                    </label>
+                    <label>Category
+                        <input id="fCategory" type="text" list="catList" placeholder="Sedans" autocomplete="off">
+                        <datalist id="catList"></datalist>
+                    </label>
+                </div>
+                <button id="saveBtn" class="btn primary">Add vehicle</button>
+                <p class="hint">Using an existing model updates its name, price and category.</p>
+            </div>
+            <ul id="manageList" class="car-list compact"></ul>
+        </section>
+    </aside>
+
+    <!-- Drag to rotate the car -->
+    <div id="stage" title="Drag to rotate"></div>
+
+    <section id="detail" class="detail hidden">
+        <div class="detail-info">
+            <h2 id="dName"></h2>
+            <p id="dMeta"></p>
+        </div>
+        <div class="detail-actions">
+            <button id="buyCash" class="btn primary" data-method="cash">Pay with cash</button>
+            <button id="buyBank" class="btn" data-method="bank">Pay with bank</button>
+        </div>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

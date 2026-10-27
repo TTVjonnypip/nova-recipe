@@ -1,0 +1,76 @@
+$engine: 3
+$onesync: on
+name: Nova Framework
+author: TTVJonnypip
+version: 1.0.0
+description: Nova roleplay framework (Qbox/QBCore style, ox_lib based) with custom inventory, character creator, spawn selector, phone, dealership, garage, starter pack, marriage and pregnancy.
+
+tasks:
+  # ---------------------------------------------------------------------------
+  # Base FiveM resources (chat, sessionmanager, hardcap)
+  # ---------------------------------------------------------------------------
+  - action: download_github
+    src: https://github.com/citizenfx/cfx-server-data
+    ref: master
+    subpath: resources
+    dest: ./resources/[cfx-default]
+
+  # ---------------------------------------------------------------------------
+  # Libraries (release builds - ox_lib must be the release zip, not source)
+  # ---------------------------------------------------------------------------
+  - action: download_file
+    url: https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip
+    path: ./tmp/oxmysql.zip
+  - action: unzip
+    src: ./tmp/oxmysql.zip
+    dest: ./resources/[ox]
+
+  - action: download_file
+    url: https://github.com/overextended/ox_lib/releases/latest/download/ox_lib.zip
+    path: ./tmp/ox_lib.zip
+  - action: unzip
+    src: ./tmp/ox_lib.zip
+    dest: ./resources/[ox]
+
+  - action: download_file
+    url: https://github.com/overextended/ox_target/releases/latest/download/ox_target.zip
+    path: ./tmp/ox_target.zip
+  - action: unzip
+    src: ./tmp/ox_target.zip
+    dest: ./resources/[ox]
+
+  - action: download_github
+    src: https://github.com/AvarianKnight/pma-voice
+    ref: main
+    dest: ./resources/[voice]/pma-voice
+
+  # ---------------------------------------------------------------------------
+  # Nova framework + scripts (from your GitHub repo)
+  # >>> Change YOUR_GITHUB_USERNAME to your GitHub username before uploading <<<
+  # ---------------------------------------------------------------------------
+  - action: download_github
+    src: https://github.com/YOUR_GITHUB_USERNAME/nova-recipe
+    ref: main
+    dest: ./tmp/nova
+
+  - action: move_path
+    src: ./tmp/nova/[nova]
+    dest: ./resources/[nova]
+
+  # ---------------------------------------------------------------------------
+  # Database
+  # ---------------------------------------------------------------------------
+  - action: connect_database
+  - action: query_database
+    file: ./tmp/nova/nova.sql
+
+  # ---------------------------------------------------------------------------
+  # server.cfg (txAdmin fills in the {{...}} values afterwards)
+  # ---------------------------------------------------------------------------
+  - action: move_path
+    src: ./tmp/nova/server.cfg
+    dest: ./server.cfg
+    overwrite: true
+
+  - action: remove_path
+    path: ./tmp

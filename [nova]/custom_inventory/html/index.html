@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main id="app" class="hidden">
+        <section class="panel" id="panel-player">
+            <header class="panel-head">
+                <div>
+                    <span class="eyebrow">Pockets</span>
+                    <h2 class="title" data-role="title">Inventory</h2>
+                </div>
+                <div class="weight"><span data-role="weight">0 / 0 kg</span><div class="bar"><i data-role="bar"></i></div></div>
+            </header>
+            <div class="grid" data-role="grid"></div>
+        </section>
+
+        <aside class="center">
+            <label class="amount">
+                <span>Amount</span>
+                <input id="amount" type="number" min="0" value="0">
+                <small>0 = whole stack</small>
+            </label>
+            <div class="action" data-action="use"><b>Use</b><small>or right-click</small></div>
+            <div class="action" data-action="give"><b>Give</b><small>closest player</small></div>
+            <div class="action" data-action="drop"><b>Drop</b><small>on the ground</small></div>
+            <p class="hints">Shift-drag: half<br>Ctrl-drag: one<br>Double-click: quick move<br>Esc / Tab: close</p>
+        </aside>
+
+        <section class="panel" id="panel-secondary">
+            <header class="panel-head">
+                <div>
+                    <span class="eyebrow" data-role="eyebrow">Nearby</span>
+                    <h2 class="title" data-role="title">Ground</h2>
+                </div>
+                <div class="weight"><span data-role="weight"></span><div class="bar"><i data-role="bar"></i></div></div>
+            </header>
+            <div class="grid" data-role="grid"></div>
+        </section>
+    </main>
+
+    <div id="hotbar" class="hidden"></div>
+    <div id="tooltip" class="hidden"></div>
+    <div id="ghost" class="hidden"></div>
+    <div id="toasts"></div>
+    <div id="progress" class="hidden"><span></span><div class="bar"><i></i></div></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
